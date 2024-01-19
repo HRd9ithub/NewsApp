@@ -29,7 +29,7 @@ export class News extends Component {
 
     async componentDidMount() {
         this.props.HandleState(20)
-        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=9c11a0d26cbe4c0685f495cdfa141dff&page=${this.state.page}&pagesize=${this.props.pagesize}`
+        let url = `${process.env.REACT_APP_API}?country=${this.props.country}&category=${this.props.category}&apiKey=9c11a0d26cbe4c0685f495cdfa141dff&page=${this.state.page}&pagesize=${this.props.pagesize}`
         this.props.HandleState(50)
         this.setState({ loading: true })
         let data = await fetch(url)
@@ -42,9 +42,10 @@ export class News extends Component {
         })
         this.props.HandleState(100)
     }
+    
     fetchMoreData = async() =>{
         this.setState({page : this.state.page + 1});
-        let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=9c11a0d26cbe4c0685f495cdfa141dff&page=${this.state.page + 1}&pagesize=${this.props.pagesize}`
+        let url = `${process.env.REACT_APP_API}?country=${this.props.country}&category=${this.props.category}&apiKey=9c11a0d26cbe4c0685f495cdfa141dff&page=${this.state.page + 1}&pagesize=${this.props.pagesize}`
         let data = await fetch(url)
         let result = await data.json();
         this.setState({
@@ -58,7 +59,7 @@ export class News extends Component {
                         <h1>NewsMonkey - Top {`${this.capitalizeFirstLetter(this.props.category)} Headlines`}</h1>
                     </div>
                     <InfiniteScroll
-                        dataLength={this.state.articles.length}
+                        dataLength={this.state.articles?.length || 0}
                         next={this.fetchMoreData}
                         hasMore={this.state.articles.length !== this.state.totalResults}
                         loader={<Spinner/>}
